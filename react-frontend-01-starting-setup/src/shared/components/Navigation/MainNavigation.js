@@ -21,7 +21,7 @@ const MainNavigation = props => {
   return (
     <React.Fragment>
       {drawerIsOpen && (<Backdrop onClick={closeDrawer} />)}
-      {drawerIsOpen && (<SideDrawer>
+      {drawerIsOpen && (<SideDrawer show={drawerIsOpen} onClose={closeDrawer} >
         <nav className="main-navigation__drawer-nav">
           <NavLinks />
         </nav>
