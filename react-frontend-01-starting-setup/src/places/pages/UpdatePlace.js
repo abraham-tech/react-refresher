@@ -1,4 +1,5 @@
 import React from 'react';
+import './PlaceForm.css';
 import {useParams} from 'react-router-dom';
 import Input from "../../shared/components/FormElements/Input";
 import {VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from "../../shared/util/validators";
@@ -41,7 +42,7 @@ const UpdatePlace = () => {
             <h2>Could not find place!</h2>
         </div>
     }
-    return (<form>
+    return (<form className='place-form'>
         <Input
             id="title"
             element="input"
@@ -50,6 +51,7 @@ const UpdatePlace = () => {
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Please enter a valid title."
             onInput={() => {}}
+            value={identifiedPlace.title}
         />
         <Input
             id="description"
@@ -58,6 +60,7 @@ const UpdatePlace = () => {
             validators={[VALIDATOR_MINLENGTH(5)]}
             errorText="Please enter a valid description (at least 5 characters)."
             onInput={() => {}}
+            value={identifiedPlace.description}
         />
 
         <Button type="submit">
