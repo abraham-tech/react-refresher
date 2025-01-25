@@ -1,19 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const placesRouter = require('./routes/places-routes');
+const placesRoutes = require('./routes/places-routes');
+const usersRoutes = require('./routes/users-routes');
+const HttpError = require('./models/http-error');
 
 const app = express();
-const port = process.env.PORT || 5001;
 
 app.use(bodyParser.json());
-app.use('/api/places', placesRouter); // api/places
 
-app.use((err, req, res) => {
-    if(!res.headersSent) {
-        res.status(err.status || 500);
-        res.json({message: err.message || "An unknown error occurred"});
-    }
-})
+app.use('/api/places', placesRoutes); // => /api/places...
+app.use('/api/users', usersRoutes);
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.use((req, res, next) => {
+  const error = new HttpError('Could not find this route.', 404);
+  throw error;
+});
+
+app.use((error, req, res, next) => {
+  if (res.headerSent) {
+    return next(error);
+  }
+  res.status(error.code || 500)
+  res.json({message: error.message || 'An unknown error occurred!'});
+});
+
+app.listen(5001);
