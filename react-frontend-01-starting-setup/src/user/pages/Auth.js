@@ -6,6 +6,7 @@ import {VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE} from "../../sha
 import {useForm} from "../../shared/hooks/form-hook";
 import Button from "../../shared/components/FormElements/Button";
 import {AuthContext} from "../../shared/context/auth-context";
+import {useHttpClient} from "../../shared/hooks/http-hook";
 
 const Auth = () => {
     const [isLoginMode, setIsLoginMode] = useState(true);
@@ -24,12 +25,45 @@ const Auth = () => {
             isValid: false,
         }
     }, false);
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-    const authSubmitHandler = event => {
+    const authSubmitHandler = async event => {
         event.preventDefault();
-        console.log(formState.inputs);
-        auth.login();
-    }
+
+        if (isLoginMode) {
+            try {
+                const responseData = await sendRequest(
+                    'http://localhost:5001/api/users/login',
+                    'POST',
+                    JSON.stringify({
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    }),
+                    {
+                        'Content-Type': 'application/json'
+                    }
+                );
+                auth.login(responseData.user.id);
+            } catch (err) {}
+        } else {
+            try {
+                const responseData = await sendRequest(
+                    'http://localhost:5001/api/users/signup',
+                    'POST',
+                    JSON.stringify({
+                        name: formState.inputs.name.value,
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    }),
+                    {
+                        'Content-Type': 'application/json'
+                    }
+                );
+
+                auth.login(responseData.user.id);
+            } catch (err) {}
+        }
+    };
 
     const switchModeHandler = event => {
         if(!isLoginMode) {
