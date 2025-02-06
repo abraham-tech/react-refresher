@@ -20,7 +20,7 @@ The **React Refresher Project** is designed to help developers revisit and stren
 
 ### Prerequisites
 
-- **Node.js** (v14 or higher) installed on your machine.
+- **Node.js** (v16 or higher) installed on your machine.
 - **npm** (comes with Node.js) installed.
 
 ### Steps
